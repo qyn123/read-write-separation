@@ -15,7 +15,7 @@ class ReadWriteSeparationApplicationTests {
 
     @Test
     void testInsert() {
-        userService.addUser(new User(14,"yn.q"));
+        userService.addUser(new User(20,"yn.q"));
     }
 
 

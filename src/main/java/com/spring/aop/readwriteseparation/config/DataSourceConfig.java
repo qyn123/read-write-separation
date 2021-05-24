@@ -19,10 +19,10 @@ import java.util.Map;
  **/
 @Configuration
 public class DataSourceConfig {
-    private final static long timeOUnt= 60000L;
-    private final static long vaildTime= 3000L;
-    private final static int  poolSize=80;
-    private final static String driver="com.mysql.cj.jdbc.Driver";
+    private final static long timeOUnt = 60000L;
+    private final static long vaildTime = 3000L;
+    private final static int poolSize = 80;
+    private final static String driver = "com.mysql.cj.jdbc.Driver";
 
     @Value("${spring.datasource.master.url}")
     private String urlMa;
@@ -49,23 +49,23 @@ public class DataSourceConfig {
     @Bean
     public DataSource masterDataSource() {
 
-    HikariConfig configuration=new HikariConfig();
-    configuration.setPoolName("MASTER");
-    configuration.setJdbcUrl(urlMa);
-    configuration.setUsername(usernameMa);
-    configuration.setPassword(passwordMa);
-    configuration.setDriverClassName(driver);
-    configuration.setMinimumIdle(poolSize);
-    configuration.setMaximumPoolSize(poolSize);
-    configuration.setConnectionTimeout(timeOUnt);
-    configuration.setReadOnly(false);
-    configuration.setValidationTimeout(vaildTime);
-    return new HikariDataSource(configuration);
+        HikariConfig configuration = new HikariConfig();
+        configuration.setPoolName("MASTER");
+        configuration.setJdbcUrl(urlMa);
+        configuration.setUsername(usernameMa);
+        configuration.setPassword(passwordMa);
+        configuration.setDriverClassName(driver);
+        configuration.setMinimumIdle(poolSize);
+        configuration.setMaximumPoolSize(poolSize);
+        configuration.setConnectionTimeout(timeOUnt);
+        configuration.setReadOnly(false);
+        configuration.setValidationTimeout(vaildTime);
+        return new HikariDataSource(configuration);
     }
 
     @Bean
     public DataSource slave1DataSource() {
-        HikariConfig configuration=new HikariConfig();
+        HikariConfig configuration = new HikariConfig();
 
         configuration.setJdbcUrl(urlS1);
         configuration.setUsername(usernameS1);
@@ -83,7 +83,7 @@ public class DataSourceConfig {
 
     @Bean
     public DataSource slave2DataSource() {
-        HikariConfig configuration=new HikariConfig();
+        HikariConfig configuration = new HikariConfig();
         configuration.setJdbcUrl(urlS2);
         configuration.setUsername(usernameS2);
         configuration.setPassword(passwordS2);
@@ -102,10 +102,10 @@ public class DataSourceConfig {
     public DataSource myRoutingDataSource(@Qualifier("masterDataSource") DataSource masterDataSource,
                                           @Qualifier("slave1DataSource") DataSource slave1DataSource,
                                           @Qualifier("slave2DataSource") DataSource slave2DataSource) {
-        Map<Object, Object> targetDataSources = new HashMap<>();
+        Map<Object, Object> targetDataSources = new HashMap<>(16);
         targetDataSources.put(DBTypeEnum.MASTER, masterDataSource);
         targetDataSources.put(DBTypeEnum.SLAVE1, slave1DataSource);
-        targetDataSources.put(DBTypeEnum.SLAVE2, slave1DataSource);
+        targetDataSources.put(DBTypeEnum.SLAVE2, slave2DataSource);
         MyRoutingDataSource myRoutingDataSource = new MyRoutingDataSource();
         myRoutingDataSource.setDefaultTargetDataSource(masterDataSource);
         myRoutingDataSource.setTargetDataSources(targetDataSources);
