@@ -1,0 +1,6 @@
+server:
+  port: 9527
+
+spring:
+  application:
+    name: read-write-separation
